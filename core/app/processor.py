@@ -427,20 +427,25 @@ class Processor:
 
     def build_file(
         self,
-        translated_lines: Sequence[str],
+        translated_lines: Sequence[str | None],
         placeholder_map: PlaceholderMap,
         lang: str,
         *,
         file: str = "None",
     ) -> str:
+
         content = "\n".join(
-            line for line in translated_lines
+            line if line is not None else ""
+            for line in translated_lines
         )
+
         self.logger.log_info(f"📦 Rebuilding {lang}_{file}")
+
         text = self._restore_placeholders(content, placeholder_map)
         text = re.sub(r"(\*\*|__)[ \t]*(.*?)[ \t]*(\1)", r"\1\2\1", text)
-        return text
 
+        return text
+    
     def post_check_placeholders(self, translated_content: str):
         rem = [
             ph

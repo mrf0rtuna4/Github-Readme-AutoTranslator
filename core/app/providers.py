@@ -50,7 +50,7 @@ class Translator(Protocol):
         text: str,
         *args: Any,
         **kwargs: Any,
-    ) -> str:
+    ) -> str | None:
         ...
 
 TranslatorClass: TypeAlias = type[Any]

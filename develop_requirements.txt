@@ -1,8 +1,0 @@
-deep_translator
-markdown-it-py
-ruff
-mypy
-pytest
-pytest-cov
-pre-commit
-ipykernel

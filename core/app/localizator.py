@@ -78,7 +78,14 @@ class LocalizationManager:
             provider_options=self.provider_options,
         )
 
-        return translator.translate(text)
+        result = translator.translate(text)
+
+        if result is None:
+            raise TranslationFailedError(
+                f"Provider returned None for '{text[:100]}' -> '{lang}'"
+            )
+
+        return str(result)
     
     async def validate_provider(self) -> None:
         self.logger.log_info(
@@ -87,7 +94,7 @@ class LocalizationManager:
         await self.translate_text("Hello", self.langs[0])
         self.logger.log_info(f"✅ {self.provider} provider validation succeeded")
 
-    async def _run_blocking_translation(self, text: str, lang: str) -> str:
+    async def _run_blocking_translation(self, text: str, lang: str) -> str | None:
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self.translation_executor, self._translate_sync, text, lang
@@ -103,7 +110,7 @@ class LocalizationManager:
             return None
         return re.compile(f"({'|'.join(placeholders)})")
 
-    async def translate_markdown_unit(self, text: str, lang: str) -> str:
+    async def translate_markdown_unit(self, text: str, lang: str) -> str | None:
         pattern = self._placeholder_pattern()
         if pattern is None or not pattern.search(text):
             return await self.translate_text(text, lang)
@@ -123,19 +130,31 @@ class LocalizationManager:
     async def translate_text(self, text: str, lang: str) -> str:
         cache_key = (lang, text)
         cached = self._translation_cache.get(cache_key)
+
         if cached is not None:
             return cached
 
         async with self.semaphore:
             try:
                 translated = await self._run_blocking_translation(text, lang)
+
+                if translated is None:
+                    raise TranslationFailedError(
+                        f"Empty translation result for '{text[:100]}'"
+                    )
+
+                translated = str(translated)
+
                 self._translation_cache[cache_key] = translated
                 return translated
+
             except Exception as e:
                 self.logger.log_error(
-                    f"Translation failed for {lang}: {str(e)}")
+                    f"Translation failed for {lang}: {str(e)}"
+                )
                 raise TranslationFailedError(
-                    f"Translation failed for '{lang}'") from e
+                    f"Translation failed for '{lang}'"
+                ) from e
 
     async def process_file(self, file_path: str) -> None:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -168,6 +187,11 @@ class LocalizationManager:
             ]
             translated_lines = await asyncio.gather(*translation_tasks)
             for lang, translated_line in zip(self.langs, translated_lines):
+                if translated_line is None:
+                    self.logger.log_error(
+                        f"NULL translation: lang={lang}, line={line!r}"
+                    )
+                    continue
                 translations[lang].append(translated_line)
 
         for lang, translated_lines in translations.items():
