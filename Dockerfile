@@ -12,4 +12,4 @@ RUN uv export --no-dev --frozen --format requirements-txt > /tmp/requirements.tx
 
 COPY core ./core
 
-ENTRYPOINT ["python", "core/main.py"]
+ENTRYPOINT ["python", "core/app/main.py"]
