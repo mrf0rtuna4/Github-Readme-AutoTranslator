@@ -202,6 +202,11 @@ class Processor:
                 index += 1
                 continue
 
+            if re.fullmatch(r"\s{0,3}([-*_])(?:\s*\1){2,}\s*", line):
+                protected.append(MarkdownRange(index, index + 1, "hr"))
+                index += 1
+                continue
+
             start = index
             index += 1
             while index < len(lines) and lines[index].strip():
@@ -240,6 +245,11 @@ class Processor:
             if token.type in {"fence", "code_block", "html_block"} and token_map:
                 protected.append(MarkdownRange(
                     token_map[0], token_map[1], token.type))
+
+            if token.type == "hr" and token_map:
+                protected.append(
+                    MarkdownRange(token_map[0], token_map[1], "hr")
+                )
 
             if token.type == "table_open" and token_map:
                 protected.append(MarkdownRange(
