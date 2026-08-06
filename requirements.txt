@@ -1,0 +1,2 @@
+deep_translator
+markdown-it-py
