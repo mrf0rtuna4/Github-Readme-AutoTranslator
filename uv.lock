@@ -442,7 +442,7 @@ wheels = [
 
 [[package]]
 name = "git-markdown-autotranslator"
-version = "0.1.0"
+version = "2.3.1"
 source = { virtual = "." }
 dependencies = [
     { name = "deep-translator" },

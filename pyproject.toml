@@ -1,6 +1,6 @@
 [project]
 name = "git-markdown-autotranslator"
-version = "0.1.0"
+version = "2.3.1"
 description = "Automatic translation of your *.md files, simply fast and convenient"
 readme = "README.md"
 requires-python = ">=3.11"
