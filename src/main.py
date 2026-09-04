@@ -3,11 +3,11 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-# DO NOT MOVE, THIS MAY STAY BEFORE core.* IMPORTS
+# DO NOT MOVE, THIS MAY STAY BEFORE src.* IMPORTS
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from core.app.exceptions import InvalidArgumentsError, InvalidMarkdownFileError
-from core.app import LocalizationManager, LocalizationConfig, Logger, TranslationProviderFactory
+from src.app.exceptions import InvalidArgumentsError, InvalidMarkdownFileError
+from src.app import LocalizationManager, LocalizationConfig, Logger, TranslationProviderFactory
 
 
 def _parse_arguments(argv: Sequence[str]) -> LocalizationConfig:
@@ -99,7 +99,7 @@ async def main():
 
     try:
         for fn in (f.strip() for f in args.files.split(",")):
-            if not fn.endswith(".md"):
+            if Path(fn).suffix.lower() != ".md":
                 raise InvalidMarkdownFileError(
                     f"File {fn} is not a markdown file")
     except InvalidMarkdownFileError as exc:

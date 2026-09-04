@@ -4,8 +4,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from core.app.exceptions import InvalidArgumentsError
-from core.main import _parse_arguments
+from src.app.exceptions import InvalidArgumentsError
+from src.main import _parse_arguments
 
 
 class MainArgumentParsingTests(unittest.TestCase):

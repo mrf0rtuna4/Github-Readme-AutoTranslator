@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from core.app.localizator import LocalizationManager
-from core.app.providers import ProviderSpec, TranslationProviderFactory
+from src.app.localizator import LocalizationManager
+from src.app.providers import ProviderSpec, TranslationProviderFactory
 
 class BlockingTranslator:
     calls = []

@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from core.app.processor import Processor
+from src.app.processor import Processor
 
 
 class ProcessorAstTests(unittest.TestCase):

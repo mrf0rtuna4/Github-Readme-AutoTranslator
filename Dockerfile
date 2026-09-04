@@ -8,8 +8,8 @@ RUN uv export --no-dev --frozen --format requirements-txt > /tmp/requirements.tx
     && uv pip install --system -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
 
-COPY core ./core
+COPY src ./src
 
-COPY ./core/app/*.py ./core/app/
+COPY ./src/app/*.py ./src/app/
 
-ENTRYPOINT ["python", "/core/main.py"]
+ENTRYPOINT ["python", "/src/main.py"]

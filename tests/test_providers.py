@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from core.app.providers import ProviderSpec, TranslationProviderFactory
+from src.app.providers import ProviderSpec, TranslationProviderFactory
 
 
 class RecordingTranslator:
